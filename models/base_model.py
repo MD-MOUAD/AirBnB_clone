@@ -8,6 +8,7 @@ from uuid import uuid4
 from datetime import datetime
 import models
 
+
 class BaseModel:
     """ class BaseModel that defines all common
     attributes/methods for other classes
@@ -60,6 +61,7 @@ class BaseModel:
         """
         dictionary = dict(self.__dict__)
         dictionary["__class__"] = self.__class__.__name__
-        dictionary["created_at"] = datetime.isoformat(self.created_at)
-        dictionary["updated_at"] = datetime.isoformat(self.updated_at)
+        for key, value in dictionary.items():
+            if isinstance(value, datetime):
+                dictionary[key] = datetime.isoformat(value)
         return dictionary
