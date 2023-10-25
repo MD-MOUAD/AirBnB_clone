@@ -3,7 +3,7 @@
 a file, as evident from the save, reload, and new methods"""
 import json
 from models.base_model import BaseModel
-
+import os
 
 class FileStorage:
     """Class FileStorage that serializes instances to a JSON file
@@ -31,7 +31,7 @@ class FileStorage:
         dictionary to the JSON file.
         """
         data = {}
-        for key, obj in FileStorage.__objects:
+        for key, obj in FileStorage.__objects.items():
             data[key] = obj.to_dict()
 
         with open(FileStorage.__file_path, "w") as f:
@@ -45,6 +45,6 @@ class FileStorage:
             for key, value in data.items():
                 if "BaseModel" in key:
                     reloaded = BaseModel(**value)
-                    FileStorage.new(reloaded)
+                    self.new(reloaded)
         except Exception:
             pass
