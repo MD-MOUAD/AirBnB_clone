@@ -6,7 +6,7 @@ handling of these aspects.
 """
 from uuid import uuid4
 from datetime import datetime
-
+from models.engine import storage
 
 class BaseModel:
     """
@@ -23,6 +23,7 @@ class BaseModel:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            storage.new()
         else:
             for key, value in kwargs.items():
                 if key != "__class__":
@@ -48,6 +49,7 @@ class BaseModel:
             None
         """
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """
