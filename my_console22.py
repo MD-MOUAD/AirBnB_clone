@@ -38,6 +38,10 @@ class HBNBCommand(cmd.Cmd):
         print("")
         return True
 
+    def do_help(self, arg):
+        print("This is a sample command-line application.")
+
+
     def emptyline(self):
         """An empty line + ENTER shouldnt execute anything
         """
