@@ -186,6 +186,9 @@ Usage: count <class name>
         if len(args) != 2:
             return super().default(line)
         class_name = args[0]
+        if class_name not in HBNBCommand._all_classes.keys():
+            print("** class doesn't exist **")
+            return
         tmp = args[1].split('(')
         # tmp = ["update", "89, latitude, 5.2)"]
         if len(tmp) < 2:
@@ -198,7 +201,7 @@ Usage: count <class name>
         if method_name == "update":
             if '{' in method_args:  # Update from dictionary
                 tmp = method_args.split(',', 1)
-                if len(tmp) != 2  or '{' not in tmp[1] or '}' not in tmp[1]:
+                if len(tmp) != 2 or '{' not in tmp[1] or '}' not in tmp[1]:
                     return super().default(line)
                 instance_id = tmp[0]
                 if "'" in instance_id:
@@ -212,7 +215,7 @@ Usage: count <class name>
                     for attr_name, attr_value in parced_dict.items():
                         final_arg = class_name + " " + instance_id + " "
                         final_arg += str(attr_name) + " " + str(attr_value)
-                        self.do_update(final_arg) 
+                        self.do_update(final_arg)
                 except json.JSONDecodeError:
                     print(f"can't update: invalid type")
                 return
