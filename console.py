@@ -198,30 +198,31 @@ Usage: count <class name>
         if method_name not in method_dict.keys():
             return super().default(line)
         # handle update arguments
-        if method_name == "update":
-            if '{' in method_args:  # Update from dictionary
-                tmp = method_args.split(',', 1)
-                if len(tmp) != 2 or '{' not in tmp[1] or '}' not in tmp[1]:
-                    return super().default(line)
-                instance_id = tmp[0]
-                if "'" in instance_id:
-                    instance_id = instance_id.replace("'", " ")
-                if '"' in instance_id:
-                    instance_id = instance_id.replace('"', " ")
-                instance_id = instance_id.strip()
-                json_dict_list = re.findall(r'{.*?}', tmp[1])
-                try:
-                    parced_dict = json.loads(json_dict_list[0])
-                    for attr_name, attr_value in parced_dict.items():
-                        final_arg = class_name + " " + instance_id + " "
-                        final_arg += str(attr_name) + " " + str(attr_value)
-                        self.do_update(final_arg)
-                except json.JSONDecodeError:
-                    print(f"can't update: invalid type")
-                return
+        # if method_name == "update":
+        #     if '{' in method_args:  # Update from dictionary
+        #         tmp = method_args.split(',', 1)
+        #         if len(tmp) != 2 or '{' not in tmp[1] or '}' not in tmp[1]:
+        #             return super().default(line)
+        #         instance_id = tmp[0]
+        #         if "'" in instance_id:
+        #             instance_id = instance_id.replace("'", " ")
+        #         if '"' in instance_id:
+        #             instance_id = instance_id.replace('"', " ")
+        #         instance_id = instance_id.strip()
+        #         json_dict_list = re.findall(r'{.*?}', tmp[1])
+        #         try:
+        #             parced_dict = json.loads(json_dict_list[0])
+        #             for attr_name, attr_value in parced_dict.items():
+        #                 final_arg = class_name + " " + instance_id + " "
+        #                 final_arg += str(attr_name) + " " + str(attr_value)
+        #                 self.do_update(final_arg)
+        #         except json.JSONDecodeError:
+        #             print(f"can't update: invalid type")
+        #         return
 
-            else:  # remove commas (',') and do a normal update
-                method_args = method_args.replace(',', ' ')
+        #     else:  # remove commas (',') and do a normal update
+        if method_name == "update":
+            method_args = method_args.replace(',', ' ')
         final_arg = class_name + " " + method_args
         return method_dict[method_name](final_arg)
 
