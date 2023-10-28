@@ -208,9 +208,9 @@ Usage: count <class name>
                 if '"' in instance_id:
                     instance_id = instance_id.replace('"', " ")
                 instance_id = instance_id.strip()
-                json_dict_list = re.findall(r'{.*?}', tmp[1])
+                list_dicts = re.findall(r'{.*?}', tmp[1])
                 try:
-                    parced_dict = json.loads(json_dict_list[0])
+                    parced_dict = json.loads(list_dicts[0].replace("'", '"'))
                     for attr_name, attr_value in parced_dict.items():
                         final_arg = class_name + " " + instance_id + " "
                         final_arg += str(attr_name) + " " + str(attr_value)
