@@ -187,8 +187,7 @@ Usage: count <class name>
             return super().default(line)
         class_name = args[0]
         if class_name not in HBNBCommand._all_classes.keys():
-            print("** class doesn't exist **")
-            return
+            return super().default(line)
         tmp = args[1].split('(')
         # tmp = ["update", "89, latitude, 5.2)"]
         if len(tmp) < 2:
