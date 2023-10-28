@@ -212,7 +212,7 @@ class HBNBCommand(cmd.Cmd):
         match = re.findall(r"^(\w+)\.(\w+)\((.*)\)", arg)
         if len(match) != 0 and match[0][1] == "update" and "{" in arg:
             _dict = re.search(r'{([^}]+)}', arg).group()
-            _dict = json.loads(_dict)
+            _dict = json.loads(_dict.replace("'", '"'))
             for k, v in _dict.items():
                 _arg = arg.split("{")[0]+k+", "+str(v)+")"
                 self._exec(_arg)

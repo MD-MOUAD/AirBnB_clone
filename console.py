@@ -187,7 +187,8 @@ Usage: count <class name>
             return super().default(line)
         class_name = args[0]
         if class_name not in HBNBCommand._all_classes.keys():
-            return super().default(line)
+            print("** class doesn't exist **")
+            return
         tmp = args[1].split('(')
         # tmp = ["update", "89, latitude, 5.2)"]
         if len(tmp) < 2:
@@ -209,7 +210,7 @@ Usage: count <class name>
                     instance_id = instance_id.replace('"', " ")
                 instance_id = instance_id.strip()
                 list_dicts = re.findall(r'{.*?}', tmp[1])
-                try:
+                try:  # pay attention you must replace("'", '"') !!
                     parced_dict = json.loads(list_dicts[0].replace("'", '"'))
                     for attr_name, attr_value in parced_dict.items():
                         final_arg = class_name + " " + instance_id + " "
