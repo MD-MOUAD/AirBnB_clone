@@ -135,6 +135,8 @@ Usage: update <class name> <id> <attribute name> "<attribute value>"
                     setattr(obj, args[2], args[3])
                 except ValueError:
                     print(f"can't update {args[2]}: invalid type")
+            else:
+                setattr(obj, args[2], args[3])
             storage.save()
 
 
