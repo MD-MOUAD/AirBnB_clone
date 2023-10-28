@@ -225,5 +225,6 @@ Usage: count <class name>
         final_arg = class_name + " " + method_args
         return method_dict[method_name](final_arg)
 
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
