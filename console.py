@@ -171,92 +171,58 @@ Usage: count <class name>
                 counter += 1
         print(counter)
 
-    # def default(self, line):
-    #     """ handle new ways of inputing data """
-    #     method_dict = {
-    #         "all": self.do_all,
-    #         "show": self.do_show,
-    #         "destroy": self.do_destroy,
-    #         "update": self.do_update,
-    #         "count": self.do_count
-    #     }
-    #     args = line.strip().split(".", 1)  # split only one time
-    #     # example: "Place.update(89, latitude, 5.2)".split(".", 1)
-    #     # => ["Place", "update(89, latitude, 5.2)"] (to keep '.' of floats)
-    #     if len(args) != 2:
-    #         return super().default(line)
-    #     class_name = args[0]
-    #     if class_name not in HBNBCommand._all_classes.keys():
-    #         return super().default(line)
-    #     tmp = args[1].split('(')
-    #     # tmp = ["update", "89, latitude, 5.2)"]
-    #     if len(tmp) < 2:
-    #         return super().default(line)
-    #     method_name = tmp[0]                # => "update"
-    #     method_args = tmp[1].split(')')[0]  # => "89, latitude, 5.2"
-    #     if method_name not in method_dict.keys():
-    #         return super().default(line)
-    #     # handle update arguments
-    #     # if method_name == "update":
-    #     #     if '{' in method_args:  # Update from dictionary
-    #     #         tmp = method_args.split(',', 1)
-    #     #         if len(tmp) != 2 or '{' not in tmp[1] or '}' not in tmp[1]:
-    #     #             return super().default(line)
-    #     #         instance_id = tmp[0]
-    #     #         if "'" in instance_id:
-    #     #             instance_id = instance_id.replace("'", " ")
-    #     #         if '"' in instance_id:
-    #     #             instance_id = instance_id.replace('"', " ")
-    #     #         instance_id = instance_id.strip()
-    #     #         json_dict_list = re.findall(r'{.*?}', tmp[1])
-    #     #         try:
-    #     #             parced_dict = json.loads(json_dict_list[0])
-    #     #             for attr_name, attr_value in parced_dict.items():
-    #     #                 final_arg = class_name + " " + instance_id + " "
-    #     #                 final_arg += str(attr_name) + " " + str(attr_value)
-    #     #                 self.do_update(final_arg)
-    #     #         except json.JSONDecodeError:
-    #     #             print(f"can't update: invalid type")
-    #     #         return
-
-    #     #     else:  # remove commas (',') and do a normal update
-    #     if method_name == "update":
-    #         method_args = method_args.replace(',', ' ')
-    #     final_arg = class_name + " " + method_args
-    #     return method_dict[method_name](final_arg)
-
-    def _exec(self, arg):
-        """helper function parsing filtring replacing"""
-        methods = {
+    def default(self, line):
+        """ handle new ways of inputing data """
+        method_dict = {
             "all": self.do_all,
-            "count": self.do_count,
             "show": self.do_show,
             "destroy": self.do_destroy,
             "update": self.do_update,
-            "create": self.do_create
+            "count": self.do_count
         }
-        match = re.findall(r"^(\w+)\.(\w+)\((.*)\)", arg)
-        args = match[0][0]+" "+match[0][2]
-        _list = args.split(", ")
-        _list[0] = _list[0].replace('"', "").replace("'", "")
-        if len(_list) > 1:
-            _list[1] = _list[1].replace('"', "").replace("'", "")
-        args = " ".join(_list)
-        if match[0][1] in methods:
-            methods[match[0][1]](args)
+        args = line.strip().split(".", 1)  # split only one time
+        # example: "Place.update(89, latitude, 5.2)".split(".", 1)
+        # => ["Place", "update(89, latitude, 5.2)"] (to keep '.' of floats)
+        if len(args) != 2:
+            return super().default(line)
+        class_name = args[0]
+        if class_name not in HBNBCommand._all_classes.keys():
+            return super().default(line)
+        tmp = args[1].split('(')
+        # tmp = ["update", "89, latitude, 5.2)"]
+        if len(tmp) < 2:
+            return super().default(line)
+        method_name = tmp[0]                # => "update"
+        method_args = tmp[1].split(')')[0]  # => "89, latitude, 5.2"
+        if method_name not in method_dict.keys():
+            return super().default(line)
+        # Handle update arguments
+        if method_name == "update":
+            if '{' in method_args:  # Update from dictionary
+                tmp = method_args.split(',', 1)
+                if len(tmp) != 2 or '{' not in tmp[1] or '}' not in tmp[1]:
+                    return super().default(line)
+                instance_id = tmp[0]
+                if "'" in instance_id:
+                    instance_id = instance_id.replace("'", " ")
+                if '"' in instance_id:
+                    instance_id = instance_id.replace('"', " ")
+                instance_id = instance_id.strip()
+                json_dict_list = re.findall(r'{.*?}', tmp[1])
+                try:
+                    parced_dict = json.loads(json_dict_list[0])
+                    for attr_name, attr_value in parced_dict.items():
+                        final_arg = class_name + " " + instance_id + " "
+                        final_arg += str(attr_name) + " " + str(attr_value)
+                        self.do_update(final_arg)
+                except json.JSONDecodeError:
+                    print(f"can't update: invalid type")
+                return
 
-    def default(self, arg):
-        """default if there no command found"""
-        match = re.findall(r"^(\w+)\.(\w+)\((.*)\)", arg)
-        if len(match) != 0 and match[0][1] == "update" and "{" in arg:
-            _dict = re.search(r'{([^}]+)}', arg).group()
-            _dict = json.loads(_dict.replace("'", '"'))
-            for k, v in _dict.items():
-                _arg = arg.split("{")[0]+k+", "+str(v)+")"
-                self._exec(_arg)
-        elif len(match) != 0:
-            self._exec(arg)
-
+            else:  # remove commas (',') and do a normal update
+                method_args = method_args.replace(',', ' ')
+        final_arg = class_name + " " + method_args
+        return method_dict[method_name](final_arg)
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
