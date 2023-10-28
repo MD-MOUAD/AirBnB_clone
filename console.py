@@ -150,6 +150,44 @@ Usage: update <class name> <id> <attribute name> "<attribute value>"
                 setattr(obj, args[2], args[3])
             storage.save()
 
+    def do_count(self, arg):
+        """Counts the number of instances of a class based on class name
+Usage: count <class name>
+        """
+        counter = 0
+        arg = arg.strip()
+        for instance_key in storage.all().keys():
+            if arg == instance_key.split('.')[0]:
+                counter += 1
+        print(counter)
+
+    def default(self, line):
+        """ handle new ways of inputing data """
+        method_dict = {
+            "all": self.do_all,
+            "show": self.do_show,
+            "destroy": self.do_destroy,
+            "update": self.do_update,
+            "count": self.do_count
+        }
+        args = line.strip().split(".")
+        if (
+            len(args) != 2 or
+            len(args[1]) < 3 or
+            args[1][-1] != ")"
+        ):
+            return super().default(line)
+        class_name = args[0]
+        tmp = args[1].split('(')
+        if len(tmp) < 2:
+            return super().default(line)
+        method_name = tmp[0]
+        method_args = tmp[1][:-1]
+        if method_name not in method_dict.keys():
+            return super().default(line)
+        final_arg = class_name + " " + method_args
+        return method_dict[method_name](final_arg)
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
