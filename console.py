@@ -2,6 +2,7 @@
 """ Console module for AirBnB """
 import cmd
 from models.base_model import BaseModel
+from models.user import User
 from models import storage
 
 
@@ -11,7 +12,7 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
     _all_classes = {
         "BaseModel": BaseModel,
-        "foo": BaseModel
+        "User": User
     }
 
     def do_quit(self, arg):

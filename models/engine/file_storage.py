@@ -3,6 +3,7 @@
 a file, as evident from the save, reload, and new methods"""
 import json
 from models.base_model import BaseModel
+from models.user import User
 
 
 class FileStorage:
@@ -44,6 +45,24 @@ class FileStorage:
                 data = json.load(f)
             for key, value in data.items():
                 if "BaseModel" in key:
+                    reloaded = BaseModel(**value)
+                    self.new(reloaded)
+                if "User" in key:
+                    reloaded = User(**value)
+                    self.new(reloaded)
+                if "State" in key:
+                    reloaded = BaseModel(**value)
+                    self.new(reloaded)
+                if "City" in key:
+                    reloaded = BaseModel(**value)
+                    self.new(reloaded)
+                if "Amenity" in key:
+                    reloaded = BaseModel(**value)
+                    self.new(reloaded)
+                if "Place" in key:
+                    reloaded = BaseModel(**value)
+                    self.new(reloaded)
+                if "Review" in key:
                     reloaded = BaseModel(**value)
                     self.new(reloaded)
         except Exception:
