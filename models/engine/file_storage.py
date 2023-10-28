@@ -3,7 +3,7 @@
 a file, as evident from the save, reload, and new methods"""
 import json
 from models.base_model import BaseModel
-import os
+
 
 class FileStorage:
     """Class FileStorage that serializes instances to a JSON file
