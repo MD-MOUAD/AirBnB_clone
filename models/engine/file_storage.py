@@ -4,6 +4,11 @@ a file, as evident from the save, reload, and new methods"""
 import json
 from models.base_model import BaseModel
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class FileStorage:
@@ -51,19 +56,19 @@ class FileStorage:
                     reloaded = User(**value)
                     self.new(reloaded)
                 if "State" in key:
-                    reloaded = BaseModel(**value)
+                    reloaded = State(**value)
                     self.new(reloaded)
                 if "City" in key:
-                    reloaded = BaseModel(**value)
+                    reloaded = City(**value)
                     self.new(reloaded)
                 if "Amenity" in key:
-                    reloaded = BaseModel(**value)
+                    reloaded = Amenity(**value)
                     self.new(reloaded)
                 if "Place" in key:
-                    reloaded = BaseModel(**value)
+                    reloaded = Place(**value)
                     self.new(reloaded)
                 if "Review" in key:
-                    reloaded = BaseModel(**value)
+                    reloaded = Review(**value)
                     self.new(reloaded)
         except Exception:
             pass
