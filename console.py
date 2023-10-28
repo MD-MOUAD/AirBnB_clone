@@ -73,7 +73,6 @@ class HBNBCommand(cmd.Cmd):
             if len(args) < 4:
                 print("** value missing **")
                 return 1
-
         return 0
 
     def do_create(self, arg):
@@ -170,7 +169,7 @@ Usage: count <class name>
             "update": self.do_update,
             "count": self.do_count
         }
-        args = line.strip().split(".")
+        args = line.strip().split(".", 1)  # split only one time
         if (
             len(args) != 2 or
             len(args[1]) < 3 or
@@ -185,6 +184,8 @@ Usage: count <class name>
         method_args = tmp[1][:-1]
         if method_name not in method_dict.keys():
             return super().default(line)
+        if method_name == "update":
+            method_args = method_args.replace(',', ' ')
         final_arg = class_name + " " + method_args
         return method_dict[method_name](final_arg)
 
